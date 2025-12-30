@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://recipe-sharing-platform-be-1.onrender.com",
+  baseURL: "https://passwordresetflow-be-2mll.onrender.com",
   withCredentials: true
 });
 
