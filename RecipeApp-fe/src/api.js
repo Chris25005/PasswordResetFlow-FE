@@ -1,8 +1,10 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://passwordresetflow-be-2mll.onrender.com",
-  withCredentials: true
+  baseURL: "http://localhost:5000",
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 export const registerUser = (data) =>
@@ -16,5 +18,3 @@ export const forgotPassword = (email) =>
 
 export const resetPassword = (token, password) =>
   API.post(`/auth/reset-password/${token}`, { password });
-
-

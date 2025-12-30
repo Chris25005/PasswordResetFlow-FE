@@ -1,43 +1,55 @@
 import { useState } from "react";
-import { loginUser } from "../api";
+import { loginUser } from "../api";   // ✅ FIXED PATH
 import { Link } from "react-router-dom";
 
 export default function Login() {
-  const [form, setForm] = useState({ email: "", password: "" });
-  const [msg, setMsg] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+
     try {
-      const res = await loginUser(form);
-      setMsg(res.data.message);
+      const res = await loginUser({ email, password });
+      console.log("Login success:", res.data);
+      alert("Login successful");
     } catch (err) {
-      setMsg(err.response?.data?.message || "Error");
+      setError(err.response?.data?.message || "Login failed");
     }
   };
 
   return (
-    <div className="container mt-5">
+    <form onSubmit={handleSubmit}>
       <h2>Login</h2>
-      {msg && <p>{msg}</p>}
-      <form onSubmit={handleSubmit}>
-        <input
-          placeholder="Email"
-          className="form-control mb-2"
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="form-control mb-2"
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-        />
-        <button className="btn btn-primary">Login</button>
-      </form>
 
-      <Link to="/forgot-password">Forgot Password?</Link>
-      <br />
-      <Link to="/register">Create new account</Link>
-    </div>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+
+      <button type="submit">Login</button>
+
+      <p>
+        <Link to="/forgot-password">Forgot Password?</Link>
+      </p>
+      <p>
+        <Link to="/register">Create new account</Link>
+      </p>
+    </form>
   );
 }
