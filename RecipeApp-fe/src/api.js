@@ -1,15 +1,20 @@
 import axios from "axios";
 
-const BASE_URL = "https://recipe-sharing-platform-be-1.onrender.com";
+const API = axios.create({
+  baseURL: "https://recipe-sharing-platform-be-1.onrender.com",
+  withCredentials: true
+});
 
 export const registerUser = (data) =>
-  axios.post(`${BASE_URL}/auth/register`, data);
+  API.post("/auth/register", data);
 
 export const loginUser = (data) =>
-  axios.post(`${BASE_URL}/auth/login`, data);
+  API.post("/auth/login", data);
 
 export const forgotPassword = (email) =>
-  axios.post(`${BASE_URL}/auth/forgot-password`, { email });
+  API.post("/auth/forgot-password", { email });
 
 export const resetPassword = (token, password) =>
-  axios.post(`${BASE_URL}/auth/reset-password/${token}`, { password });
+  API.post(`/auth/reset-password/${token}`, { password });
+
+
