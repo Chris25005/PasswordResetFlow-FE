@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://passwordresetflow-be-2mll.onrender.com/",
+  baseURL: "https://passwordresetflow-be07.onrender.com",
   headers: {
     "Content-Type": "application/json",
   },
