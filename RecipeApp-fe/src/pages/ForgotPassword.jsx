@@ -10,18 +10,22 @@ export default function ForgotPassword() {
     try {
       const res = await api.post("/auth/forgot-password", { email });
       setMsg(res.data.message);
-    } catch {
-      setMsg("User not found");
+    } catch (err) {
+      setMsg(err.response?.data?.message || "User not found");
     }
   };
 
   return (
-    <form onSubmit={submit}>
+    <div className="container mt-5">
       <h2>Forgot Password</h2>
       <p>{msg}</p>
 
-      <input placeholder="Email" onChange={e => setEmail(e.target.value)} />
-      <button>Send Reset Link</button>
-    </form>
+      <form onSubmit={submit}>
+        <input className="form-control mb-2" placeholder="Email"
+          onChange={e => setEmail(e.target.value)} />
+
+        <button className="btn btn-warning">Send Reset Link</button>
+      </form>
+    </div>
   );
 }

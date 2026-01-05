@@ -1,4 +1,4 @@
-function Success() {
+export default function Success() {
   return (
     <div className="container mt-5 text-center">
       <h3>Password Updated Successfully 🎉</h3>
@@ -6,5 +6,3 @@ function Success() {
     </div>
   );
 }
-
-export default Success;

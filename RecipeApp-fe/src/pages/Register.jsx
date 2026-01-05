@@ -9,24 +9,34 @@ export default function Register() {
   const submit = async (e) => {
     e.preventDefault();
     try {
-      await api.post("/auth/register", form);
-      setMsg("Registered successfully. Please login.");
-    } catch {
-      setMsg("Register failed");
+      const res = await api.post("/auth/register", form);
+      setMsg(res.data.message);
+    } catch (err) {
+      setMsg(err.response?.data?.message || "Registration failed");
     }
   };
 
   return (
-    <form onSubmit={submit}>
+    <div className="container mt-5">
       <h2>Register</h2>
-      <p>{msg}</p>
+      <p className="text-success">{msg}</p>
 
-      <input placeholder="Name" onChange={e => setForm({...form, name:e.target.value})} />
-      <input placeholder="Email" onChange={e => setForm({...form, email:e.target.value})} />
-      <input type="password" placeholder="Password" onChange={e => setForm({...form, password:e.target.value})} />
+      <form onSubmit={submit}>
+        <input className="form-control mb-2" placeholder="Name"
+          onChange={e => setForm({ ...form, name: e.target.value })} />
 
-      <button>Register</button>
-      <Link to="/login">Already have an account?</Link>
-    </form>
+        <input className="form-control mb-2" placeholder="Email"
+          onChange={e => setForm({ ...form, email: e.target.value })} />
+
+        <input className="form-control mb-2" type="password" placeholder="Password"
+          onChange={e => setForm({ ...form, password: e.target.value })} />
+
+        <button className="btn btn-primary">Register</button>
+      </form>
+
+      <p className="mt-3">
+        Already have an account? <Link to="/login">Login</Link>
+      </p>
+    </div>
   );
 }
