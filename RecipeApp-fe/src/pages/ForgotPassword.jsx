@@ -1,47 +1,27 @@
 import { useState } from "react";
-import { forgotPassword } from "../api";
+import api from "../api";
 
-function ForgotPassword() {
+export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [msg, setMsg] = useState("");
-  const [error, setError] = useState("");
 
-  const submitHandler = async (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    setMsg("");
-    setError("");
-
     try {
-      const res = await forgotPassword(email);
-      setMsg(res.data.message || "Reset link sent to your email");
-    } catch (err) {
-      setError(err.response?.data?.message || "User not found");
+      const res = await api.post("/auth/forgot-password", { email });
+      setMsg(res.data.message);
+    } catch {
+      setMsg("User not found");
     }
   };
 
   return (
-    <div className="container col-md-4 mt-5">
-      <h3 className="text-center">Forgot Password</h3>
+    <form onSubmit={submit}>
+      <h2>Forgot Password</h2>
+      <p>{msg}</p>
 
-      {msg && <div className="alert alert-success">{msg}</div>}
-      {error && <div className="alert alert-danger">{error}</div>}
-
-      <form onSubmit={submitHandler}>
-        <input
-          type="email"
-          className="form-control mb-3"
-          placeholder="Enter registered email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-
-        <button className="btn btn-primary w-100">
-          Send Reset Link
-        </button>
-      </form>
-    </div>
+      <input placeholder="Email" onChange={e => setEmail(e.target.value)} />
+      <button>Send Reset Link</button>
+    </form>
   );
 }
-
-export default ForgotPassword;

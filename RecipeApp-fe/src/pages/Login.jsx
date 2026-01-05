@@ -1,55 +1,31 @@
 import { useState } from "react";
-import { loginUser } from "../api";   // ✅ FIXED PATH
+import api from "../api";
 import { Link } from "react-router-dom";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [msg, setMsg] = useState("");
 
-  const handleSubmit = async (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    setError("");
-
     try {
-      const res = await loginUser({ email, password });
-      console.log("Login success:", res.data);
-      alert("Login successful");
-    } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      await api.post("/auth/login", form);
+      setMsg("Login successful");
+    } catch {
+      setMsg("Login failed");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={submit}>
       <h2>Login</h2>
+      <p>{msg}</p>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      <input placeholder="Email" onChange={e => setForm({...form, email:e.target.value})} />
+      <input type="password" placeholder="Password" onChange={e => setForm({...form, password:e.target.value})} />
 
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
-
-      <button type="submit">Login</button>
-
-      <p>
-        <Link to="/forgot-password">Forgot Password?</Link>
-      </p>
-      <p>
-        <Link to="/register">Create new account</Link>
-      </p>
+      <button>Login</button>
+      <Link to="/forgot-password">Forgot Password?</Link>
     </form>
   );
 }

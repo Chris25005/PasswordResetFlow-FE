@@ -1,47 +1,29 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useState } from "react";
-import { resetPassword } from "../api";
+import api from "../api";
 
-function ResetPassword() {
+export default function ResetPassword() {
   const { token } = useParams();
-  const navigate = useNavigate();
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [msg, setMsg] = useState("");
 
-  const submitHandler = async (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    setError("");
-
     try {
-      await resetPassword(token, password);
-      navigate("/success");
-    } catch (err) {
-      setError(err.response?.data?.message || "Invalid or expired link");
+      const res = await api.post(`/auth/reset-password/${token}`, { password });
+      setMsg(res.data.message);
+    } catch {
+      setMsg("Invalid or expired link");
     }
   };
 
   return (
-    <div className="container col-md-4 mt-5">
-      <h3 className="text-center">Reset Password</h3>
+    <form onSubmit={submit}>
+      <h2>Reset Password</h2>
+      <p>{msg}</p>
 
-      {error && <div className="alert alert-danger">{error}</div>}
-
-      <form onSubmit={submitHandler}>
-        <input
-          type="password"
-          className="form-control mb-3"
-          placeholder="New password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-
-        <button className="btn btn-success w-100">
-          Update Password
-        </button>
-      </form>
-    </div>
+      <input type="password" placeholder="New password" onChange={e => setPassword(e.target.value)} />
+      <button>Reset</button>
+    </form>
   );
 }
-
-export default ResetPassword;
